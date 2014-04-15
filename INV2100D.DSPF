@@ -1,0 +1,196 @@
+     A* Maintain Location Storage Capacities                                    
+     A                                      DSPSIZ(24 80 *DS3)                  
+     A                                      REF(*LIBL/LOCSTORG)                 
+     A                                      PRINT                               
+     A                                      ERRSFL                              
+      **************************************************************************
+     A          R SCR00                                                         
+     A                                      OVERLAY                             
+     A                                  1  4DATE                                
+     A                                      EDTCDE(Y)                           
+     A                                  1 26'Maintain Location Storage'         
+     A                                      COLOR(WHT)                          
+     A                                  1 70USER                                
+     A                                  2  4TIME                                
+     A            @JOB          10A  O  2 70                                    
+      **************************************************************************
+     A          R SCR01                                                         
+     A                                      CA03                                
+     A                                      CF09                                
+     A                                      RTNCSRLOC(&@RCD &@FLD &@POS)        
+     A                                      CSRLOC(ROW COL)                     
+     A                                      BLINK                               
+     A                                      OVERLAY                             
+      *-------------------------------------                                    
+     A            SCRFLD        10A  H                                          
+     A            SCRFMT        10A  H                                          
+     A            @RCD          10A  H                                          
+     A            @POS           4S 0H                                          
+     A            COL            3S 0H                                          
+     A            ROW            3S 0H                                          
+     A            @FLD          10A  H                                          
+      *-------------------------------------                                    
+     A                                 11 29'Item:'                             
+     A                                      COLOR(WHT)                          
+     A            WSITEM    R     Y  B 11 35REFFLD(LOITEM)                      
+     A                                      EDTCDE(Z)                           
+     A                                      CHECK(RB)                           
+     A                                 12 25'Location:'                         
+     A                                      COLOR(WHT)                          
+     A            WSLOC     R     Y  B 12 35REFFLD(LONUM)                       
+     A                                      EDTCDE(Z)                           
+     A                                      CHECK(RB)                           
+                                                                                
+     A                                 23  2'F3=Exit'                           
+     A                                      COLOR(BLU)                          
+     A                                 23 11'F9=Search'                         
+     A                                      COLOR(BLU)                          
+      **************************************************************************
+     A          R SCR02                                                         
+     A                                      CF05                                
+     A                                      CA12                                
+     A                                      RTNCSRLOC(&@RCD &@FLD &@POS)        
+     A                                      BLINK                               
+     A                                      OVERLAY                             
+     A                                      CSRLOC(ROW        COL)              
+      *-------------------------------------                                    
+     A            @RCD          10A  H                                          
+     A            COL            3S 0H                                          
+     A            ROW            3S 0H                                          
+     A            @POS           4S 0H                                          
+A    A            @FLD          10A  H                                          
+     A            LONUMH    R        H      REFFLD(LONUM LOCSTORG)              
+     A            LOITEMH   R        H      REFFLD(LOITEM LOCSTORG)             
+      *-------------------------------------                                    
+     A                                  5 23'Item:'                             
+     A                                      COLOR(WHT)                          
+     A            LOITEM    R     Y  O  5 29REFFLD(LOITEM LOCSTORG)             
+     A                                      EDTCDE(Z)                           
+     A            INDESC    R        O  5 37REFFLD(INDESC INVMAST)              
+     A                                  6 19'Location:'                         
+     A                                      COLOR(WHT)                          
+     A            LONUM     R     Y  O  6 33REFFLD(LONUM LOCSTORG)              
+     A                                      EDTCDE(Z)                           
+     A            BRLOCNAME R        O  6 37REFFLD(BRLOCNAME LOCMAST)           
+     A                                  7 19'Capacity:'                         
+     A                                      COLOR(WHT)                          
+     A            LOSTORAGE R     Y  B  7 29EDTCDE(K)                           
+     A                                      CHECK(RB)                           
+     A          R SCR03S                    SFL                                 
+     A  95                                  SFLNXTCHG                           
+     A            LONUM     R        B  7 25EDTCDE(Z)                           
+     A                                      CHECK(RB)                           
+     A  25                                  DSPATR(PR)                          
+     A N25                                  DSPATR(UL)                          
+     A            BRNAME    R        O  7 33REFFLD(BRNAME LOCMAST)              
+     A            LOSTORAGE R     Y  B  7 47EDTCDE(K)                           
+     A                                      CHECK(RB)                           
+      **************************************************************************
+     A          R SCR03C                    SFLCTL(SCR03S)                      
+     A                                      SFLSIZ(9999)                        
+     A                                      SFLPAG(0015)                        
+     A                                      CF05                                
+     A                                      CF09                                
+     A                                      CA12                                
+     A                                      RTNCSRLOC(&@RCD &@FLD &@POS)        
+     A                                      BLINK                               
+     A                                      CSRLOC(ROW        COL)              
+     A                                      OVERLAY                             
+     A                                      SFLCSRRRN(&SFLCSR)                  
+     A  92                                  SFLDSP                              
+     A N90                                  SFLDSPCTL                           
+     A  90                                  SFLINZ                              
+     A  91                                  SFLEND(*MORE)                       
+     A                                      SFLRNA                              
+      *-------------------------------------                                    
+     A            @FLD          10A  H                                          
+     A            @POS           4S 0H                                          
+     A            @RCD          10A  H                                          
+     A            SFLCSR         5S 0H                                          
+     A            SFLPOS         4S 0H      SFLRCDNBR(CURSOR)                   
+     A            SFLRRN         4S 0H                                          
+     A            ROW            3S 0H                                          
+     A            COL            3S 0H                                          
+      *-------------------------------------                                    
+     A                                  4 24'Item:'                             
+     A                                      COLOR(WHT)                          
+     A            INITEM    R        O  4 30REFFLD(INITEM INVMAST)              
+     A            INDESC    R        O  4 38REFFLD(INDESC INVMAST)              
+     A                                  6 23'Location'                          
+     A                                      COLOR(WHT)                          
+     A                                  6 50'Capacity'                          
+     A                                      COLOR(WHT)                          
+      **************************************************************************
+     A          R SCR04S                    SFL                                 
+     A  95                                  SFLNXTCHG                           
+      *-------------------------------------                                    
+     A            LONUMH    R        H      REFFLD(LONUM LOCSTORG)              
+     A            LOITEMH   R        H      REFFLD(LOITEM LOCSTORG)             
+      *-------------------------------------                                    
+     A            LOITEM    R        B  7 15CHECK(RB)                           
+     A  25                                  DSPATR(PR)                          
+     A N25                                  DSPATR(UL)                          
+     A            INDESC    R        O  7 27REFFLD(INDESC INVMAST)              
+     A            LOSTORAGE R     Y  B  7 56EDTCDE(K)                           
+     A                                      CHECK(RB)                           
+      **************************************************************************
+     A          R SCR04C                    SFLCTL(SCR04S)                      
+     A                                      SFLSIZ(9999)                        
+     A                                      SFLPAG(0015)                        
+     A                                      BLINK                               
+     A                                      OVERLAY                             
+     A                                      RTNCSRLOC(&@RCD &@FLD &@POS)        
+     A                                      CSRLOC(ROW        COL)              
+     A  92                                  SFLDSP                              
+     A N90                                  SFLDSPCTL                           
+     A  90                                  SFLINZ                              
+     A                                      SFLRNA                              
+     A  91                                  SFLEND(*MORE)                       
+     A                                      SFLCSRRRN(&SFLCSR)                  
+     A                                      CF05                                
+     A                                      CF09                                
+     A                                      CA12                                
+      *-------------------------------------                                    
+     A            @FLD          10A  H                                          
+     A            @RCD          10A  H                                          
+     A            @POS           4S 0H                                          
+     A            COL            3S 0H                                          
+     A            SFLCSR         5S 0H                                          
+     A            SFLPOS         4S 0H      SFLRCDNBR(CURSOR)                   
+     A            SFLRRN         4S 0H                                          
+     A            ROW            3S 0H                                          
+      *-------------------------------------                                    
+     A                                  4 17'Location:'                         
+     A                                      COLOR(WHT)                          
+     A            BRNUMB    R     Y  O  4 27REFFLD(BRNUMB LOCMAST)              
+     A                                      EDTCDE(Z)                           
+     A            BRLOCNAME R        O  4 31REFFLD(BRLOCNAME LOCMAST)           
+                                                                                
+     A                                  6 16'Item'                              
+     A                                      COLOR(WHT)                          
+     A                                  6 31'Item Description'                  
+     A                                      COLOR(WHT)                          
+     A                                  6 58'Capacity'                          
+     A                                      COLOR(WHT)                          
+      **************************************************************************
+     A          R FOOTER                                                        
+     A                                      OVERLAY                             
+     A            CMDKEY        51   O 23  2COLOR(BLU)                          
+      **************************************************************************
+     A          R MSGSFL                                                        
+     A                                      SFL                                 
+     A                                      SFLMSGRCD(24)                       
+     A            @KEY                      SFLMSGKEY                           
+     A            @PGMQ                     SFLPGMQ                             
+      **************************************************************************
+     A          R MSGCTL                                                        
+     A                                      SFLCTL(MSGSFL)                      
+     A  97                                  OVERLAY                             
+     A                                      SFLDSPCTL                           
+     A                                      SFLSIZ(2)                           
+     A                                      SFLPAG(1)                           
+     A  99                                  SFLDSP                              
+     A  99                                  SFLEND                              
+     A                                      SFLINZ                              
+     A            @PGMQ                     SFLPGMQ                             
+      ************************************************************************** 
